@@ -1,0 +1,74 @@
+@baseUrl = http://localhost:5050
+@json = application/json
+
+### GET all posts
+GET {{baseUrl}}/api/posts
+Accept: {{json}}
+
+
+### POST dodaj post (201)
+POST {{baseUrl}}/api/posts
+Content-Type: {{json}}
+
+{
+  "title": "Post testowy",
+  "body": "Treść posta do testów komentarzy."
+}
+
+### POST dodaj post z pustym tytułem i body(400)
+POST {{baseUrl}}/api/posts
+Content-Type: {{json}}
+
+{
+  "title": "",
+  "body": ""
+}
+
+### GET approval dla postów
+GET {{baseUrl}}/api/posts/1/comments
+Accept: {{json}}
+
+### POST dodaj komentarz do post 1 (201)
+POST {{baseUrl}}/api/posts/1/comments
+Content-Type: {{json}}
+
+{
+  "author": "Ala",
+  "body": "Komentarz do zatwierdzenia."
+}
+
+
+### GET appoval dla 1 komentarza (powinien być widoczny jako oczekujący)
+GET {{baseUrl}}/api/posts/1/comments
+Accept: {{json}}
+
+### POST dodaj komentarz z pustym body (400)
+POST {{baseUrl}}/api/posts/1/comments
+Content-Type: {{json}}
+
+{
+  "author": "Ala",
+  "body": ""
+}
+
+### POST dodaj komentarz do nieistniejącego posta (404)
+POST {{baseUrl}}/api/posts/999/comments
+Content-Type: {{json}}
+
+{
+  "author": "Ala",
+  "body": "Trudne się wylosowalo."
+}
+
+### GET komentarze oczekujące na approval
+GET {{baseUrl}}/api/mod/pending
+Accept: {{json}}
+
+
+### GET approval dla komentarzy do post 1 
+GET {{baseUrl}}/api/posts/1/comments
+Accept: {{json}}
+
+### Approval- komentarz nie znaleziony (404)
+POST {{baseUrl}}/api/comments/999/approve
+Accept: {{json}}

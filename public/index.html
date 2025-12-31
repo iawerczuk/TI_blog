@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Blog</title>
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+  <header>
+    <h1>Blog</h1>
+    <small>API: <code id="api-url"></code></small>
+  </header>
+
+  <main class="grid">
+    <section class="panel">
+      <h2>Posty</h2>
+      <div id="posts"></div>
+
+      <h3>Dodaj post</h3>
+      <form id="post-form">
+        <label>Tytuł <input name="title" required></label>
+        <label>Treść <textarea name="body" rows="4" required></textarea></label>
+        <button type="submit">Dodaj</button>
+        <p class="hint" id="post-msg"></p>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Komentarze</h2>
+      <div id="comments"></div>
+
+      <h3>Dodaj komentarz</h3>
+      <form id="comment-form">
+        <label>Autor <input name="author" required></label>
+        <label>Treść <textarea name="body" rows="3" required></textarea></label>
+        <button type="submit">Wyślij</button>
+        <p class="hint" id="comment-msg"></p>
+      </form>
+    </section>
+
+    <section class="panel wide">
+      <h2>Panel moderatora</h2>
+      <div class="hint">Nowy komentarz nie jest widoczny publicznie, dopóki nie zostanie zatwierdzony.</div>
+      <div id="pending"></div>
+    </section>
+  </main>
+
+  <script>
+    window.API_BASE = window.location.origin;
+    document.getElementById("api-url").textContent = window.API_BASE;
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
