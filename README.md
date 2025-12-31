@@ -1,5 +1,5 @@
 
-# Ranging filmów
+# Ranking filmów
 
 Aplikacja realizująca ranking filmów na podstawie głosów użytkowników. System umożliwia dodawanie filmów oraz wystawianie ocen, które dynamicznie wpływają na średnią i pozycję w rankingu.
 
