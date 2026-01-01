@@ -1,21 +1,20 @@
 
-# Ranking filmów
+# Blog API
 
-Aplikacja realizująca ranking filmów na podstawie głosów użytkowników. System umożliwia dodawanie filmów oraz wystawianie ocen, które dynamicznie wpływają na średnią i pozycję w rankingu.
+Aplikacja realizująca prosty blog z możliwością dodawania komentarzy oraz ręcznym zatwierdzaniem komentarzy.
 
----
 
 ## Technologia
 
 - **Backend:** Node.js (Express)
 - **Baza danych:** SQLite
-- **Interfejs:** katalog `public/` (HTML, CSS, JS)
+- **Interfejs:** katalog `public/`
 
 ---
 
 ## Uruchomienie
 
-1. Zainstaluj wymagane zależności:
+1. Zainstaluj zależności:
    ```bash
    npm install
 
@@ -28,80 +27,60 @@ node server.js
 ```
 
 
-3. Adres aplikacji: `http://localhost:5050`
+3. Adres aplikacji: [http://localhost:5050](https://www.google.com/search?q=http://localhost:5050)
 
 ---
 
 ## Zakres funkcjonalny
 
-### Filmy
+### Posty
 
-* Dodawanie filmów (title, year).
-* Listowanie filmów wraz ze statystykami.
+* Dodawanie postów (`title`, `body`).
+* Wyświetlanie listy wszystkich postów.
+* Widok szczegółów konkretnego posta.
 
-### Oceny
+### Komentarze
 
-* Dodawanie oceny `score` w zakresie 1–5 dla wybranego filmu.
-* Walidacja zakresu oceny po stronie backendu.
+* Dodawanie komentarzy do posta (`author`, `body`).
+* Komentarze domyślnie otrzymują status `approved = 0`.
+* Widok publiczny wyświetla wyłącznie zatwierdzone komentarze.
 
-### Ranking
+### Moderacja
 
-* Zwracanie listy filmów z `avg_score` (średnia zaokrąglona do 2 miejsc) i `votes` (liczba głosów).
-* Automatyczne sortowanie malejąco po średniej ocen.
-
----
+* Lista komentarzy oczekujących na zatwierdzenie.
+* Ręczne zatwierdzanie komentarzy (zmiana statusu na `approved = 1`).
 
 ## Model danych
 
-* **movies**(id, title, year)
-* **ratings**(id, movie_id → movies.id, score CHECK 1..5)
-
----
+* `posts(id, title, body, created_at)`
+* `comments(id, post_id → posts.id, author, body, created_at, approved)`
 
 ## API
 
-* `GET /api/movies` – lista filmów z `avg_score` i `votes`
-* `POST /api/movies` – dodanie filmu `{title, year}`
-* `POST /api/ratings` – dodanie oceny `{movie_id, score}`
-* `GET /api/movies/top` – (Bonus) lista Top-N filmów
+* `GET /api/posts` – lista wszystkich postów.
+* `POST /api/posts` – dodanie nowego posta.
+* `GET /api/posts/{id}/comments` – pobranie zatwierdzonych komentarzy dla danego posta.
+* `POST /api/posts/{id}/comments` – dodanie nowego komentarza (domyślnie niezatwierdzony).
+* `POST /api/comments/{id}/approve` – zatwierdzenie konkretnego komentarza.
+* `GET /api/mod/pending` – lista wszystkich komentarzy oczekujących na moderację.
 
----
 
 ## Walidacja i statusy HTTP
 
-* **201 Created** – poprawne utworzenie zasobu.
-* **200 OK** – poprawna operacja.
-* **400 Bad Request** – błędne dane wejściowe (np. `score` poza zakresem).
-* **404 Not Found** – brak zasobu (np. ocena nieistniejącego filmu).
+* **201 Created** – poprawne utworzenie zasobu (posta lub komentarza).
+* **200 OK** – poprawna operacja (pobranie danych, zatwierdzenie).
+* **400 Bad Request** – błędne dane wejściowe.
+* **404 Not Found** – brak zasobu (np. nieistniejący post).
 * **500 Internal Server Error** – błąd serwera.
 
----
+## Bezpieczeństwo
 
-## Bezpieczeństwo i HTTP
-
-* `X-Content-Type-Options: nosniff`
-* `Referrer-Policy: no-referrer`
-* `Cache-Control: no-store` dla endpointów API
-* Wyłączony nagłówek `X-Powered-By`
-* Konfiguracja **Content Security Policy (CSP)** dla skryptów inline.
-
----
+* Nagłówek `X-Content-Type-Options: nosniff`.
+* Nagłówek `Referrer-Policy: no-referrer`.
+* Nagłówek `Cache-Control: no-store` dla endpointów API.
+* Wyłączony nagłówek `X-Powered-By`.
 
 ## Testowanie
 
-Plik `tests.rest` zawiera przykładowe wywołania endpointów API. Testy wykonano przy użyciu rozszerzenia **REST Client** dla VS Code.
+Plik `tests.rest` zawiera przykładowe wywołania endpointów API. Testy zostały przeprowadzone przy użyciu rozszerzenia **REST Client** dla Visual Studio Code.
 
-### Scenariusze testowe:
-
-* Poprawne wykonanie operacji (happy path).
-* Walidacja błędnych danych (ocena spoza zakresu).
-* Aktualizacja średniej ocen bez restartu aplikacji.
-
----
-
-## Oddanie projektu
-
-* Repozytorium z kodem źródłowym.
-* Plik `README.md`.
-* Min. 3 zrzuty ekranu prezentujące działanie aplikacji.
-* Plik `tests.rest` z przykładami wywołań.
